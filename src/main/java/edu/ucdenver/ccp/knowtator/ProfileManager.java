@@ -21,7 +21,7 @@ public class ProfileManager {
         profiles = new HashMap<>();
     }
 
-    void setupDefault() {
+    public void setupDefault() {
         addNewProfile("Default", "Default");
     }
 

@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator.Commands;
 
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
 import edu.ucdenver.ccp.knowtator.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
 import org.protege.editor.core.ui.view.DisposableAction;
 import org.xml.sax.SAXException;
 
@@ -17,12 +16,10 @@ import java.io.IOException;
 
 public class LoadAnnotationsCommand extends DisposableAction {
 
-    private JTabbedPane tabbedPane;
     private XmlUtil xmlUtil;
 
-    public LoadAnnotationsCommand(JTabbedPane tabbedPane, XmlUtil xmlUtil) {
+    public LoadAnnotationsCommand(XmlUtil xmlUtil) {
         super("Load Annotations", KnowtatorIcons.getIcon(KnowtatorIcons.LOAD_ANNOTATIONS_ICON));
-        this.tabbedPane = tabbedPane;
         this.xmlUtil = xmlUtil;
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Load annotations");
     }
@@ -36,8 +33,6 @@ public class LoadAnnotationsCommand extends DisposableAction {
         JFileChooser fileChooser = new JFileChooser();
         FileFilter fileFilter = new FileNameExtensionFilter(" XML", "xml");
         fileChooser.setFileFilter(fileFilter);
-
-        KnowtatorTextPane textViewer = (KnowtatorTextPane)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
 
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             try {

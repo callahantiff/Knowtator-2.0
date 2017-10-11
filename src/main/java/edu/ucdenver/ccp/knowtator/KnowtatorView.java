@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorGraphViewer;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextViewer;
 import edu.ucdenver.ccp.knowtator.xml.XmlUtil;
@@ -19,6 +20,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     ProfileManager profileManager;
     KnowtatorSelectionModel selectionModel;
+
+    public TextAnnotationManager getTextAnnotationManager() {
+        return textAnnotationManager;
+    }
+
+    private TextAnnotationManager textAnnotationManager;
     XmlUtil xmlUtil;
     KnowtatorTextViewer textViewer;
     KnowtatorGraphViewer graphViewer;
@@ -29,6 +36,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     public KnowtatorGraphViewer getGraphViewer() {
         return graphViewer;
     }
+
     /**
      *
      */
@@ -39,6 +47,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         /*
         Initialize the managers, models, and utils
          */
+        textAnnotationManager = new TextAnnotationManager(this);
         selectionModel = new KnowtatorSelectionModel();  //helps get the selected OWL API classes
         profileManager = new ProfileManager(this);  //manipulates profiles and highlighters
         xmlUtil = new XmlUtil(this);  //reads and writes to XML

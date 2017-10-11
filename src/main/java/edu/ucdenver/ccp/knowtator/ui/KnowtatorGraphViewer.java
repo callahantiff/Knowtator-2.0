@@ -6,8 +6,8 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +36,19 @@ public class KnowtatorGraphViewer extends JPanel {
     public KnowtatorGraphViewer(KnowtatorView view) {
         this.view = view;
         graph = new mxGraph();
-        parent = graph.getDefaultParent();
+
+        graph.getModel().beginUpdate();
+        try {
+            parent = graph.insertVertex(graph.getDefaultParent(), null, "Hi, I am the parent", 20, 20,80, 30);
+
+            // apply layout to graph
+            mxHierarchicalLayout layout = new mxHierarchicalLayout(
+                    graph);
+            layout.setOrientation(SwingConstants.WEST);
+            layout.execute(graph.getDefaultParent());
+        } finally {
+            graph.getModel().endUpdate();
+        }
 
 
         graphComponent = new mxGraphComponent(graph);
@@ -48,7 +60,7 @@ public class KnowtatorGraphViewer extends JPanel {
             Object[] cells = (Object[])evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
-                    AssertionRelationship relationship = ((KnowtatorTextPane) ((JScrollPane) view.getTextViewer().getSelectedComponent()).getViewport().getView()).getTextAnnotationManager().addAssertion();
+                    AssertionRelationship relationship = view.getTextAnnotationManager().addAssertion();
                     if (relationship != null) {
                         ((mxCell) cell).setValue(relationship);
                     } else {
@@ -75,13 +87,13 @@ public class KnowtatorGraphViewer extends JPanel {
              */
             public void mouseReleased(MouseEvent e)
             {
-                if (e.isPopupTrigger())
-                {
+                if (e.isPopupTrigger()) {
                     showGraphPopupMenu(e);
                 }
             }
 
         });
+
 
         graph.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> {
             Object[] cells = (Object[])evt.getProperty("cells");
@@ -94,7 +106,7 @@ public class KnowtatorGraphViewer extends JPanel {
 
     }
 
-    public void addAnnotationNode(Annotation value) {
+    public void addAnnotationNode(TextAnnotation value) {
         graph.getModel().beginUpdate();
         try {
             graph.insertVertex(parent, null, value, 20, 20,

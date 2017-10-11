@@ -9,8 +9,6 @@ public class KnowtatorIcons {
     public static final String OPEN_DOCUMENT_ICON = "icons8-TXT.png";
     public static final String CLOSE_DOCUMENT_ICON = "icons8-Close Window-48.png";
     public static final String LOAD_ANNOTATIONS_ICON = "icons8-XML-48.png";
-    public static final String ADD_TEXT_ANNOTATION_ICON = "icons8-Create.png";
-    public static final String REMOVE_TEXT_ANNOTATION_ICON = "icons8-Trash Can.png";
     public static final String SAVE_ANNOTATIONS_ICON = "icons8-Save.png";
     public static final String NEW_PROFILE_ICON = "icons8-Edit Profile.png";
     public static final String NEW_HIGHLIGHTER_ICON = "icons8-Paint Palette-48.png";

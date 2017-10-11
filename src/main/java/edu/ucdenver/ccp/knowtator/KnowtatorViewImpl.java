@@ -69,6 +69,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
          */
         List<String> testArticles = new ArrayList<>();
         testArticles.add("/file/test_article.txt");
+        testArticles.add("/file/test_article2.txt");
         List<String> testAnnotations = new ArrayList<>();
         testAnnotations.add("/file/test_annotations.xml");
         textViewer.addDocuments(testArticles, testAnnotations, true);
@@ -91,7 +92,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
         /*
         Text annotation related actions
          */
-        addAction(new LoadAnnotationsCommand(textViewer, xmlUtil), "B", "A");
+        addAction(new LoadAnnotationsCommand(xmlUtil), "B", "A");
         addAction(new SaveAnnotationsToXmlCommand(xmlUtil), "B", "B");
 
         addAction(new RunIAACommand(this), "B", "E");

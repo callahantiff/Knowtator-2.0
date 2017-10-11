@@ -1,8 +1,8 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
-import edu.ucdenver.ccp.knowtator.iaa.Span;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
 import org.apache.log4j.Logger;
@@ -66,17 +66,17 @@ public final class XmlUtil {
         }
     }
 
-    private ArrayList<String> annotationToXML(Annotation textAnnotation) {
+    private ArrayList<String> annotationToXML(TextAnnotation textTextAnnotation) {
         ArrayList<String> toWrite = new ArrayList<>();
 
         toWrite.add(String.format("  <%s>", TAG_ANNOTATION));
 //        toWrite.add(String.format("    <%s %s=\"%s\" />", TAG_MENTION, TAG_MENTION_ID, mention));
-        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", TAG_ANNOTATOR, TAG_ANNOTATOR_ID, textAnnotation.getAnnotatorID(), textAnnotation.getAnnotatorName(), TAG_ANNOTATOR));
-        for (Span span : textAnnotation.getSpans()) {
-            toWrite.add(String.format("    <%s %s=\"%s\" %s=\"%s\" />", TAG_SPAN, TAG_SPAN_START, span.getStart(), TAG_SPAN_END, span.getEnd()));
-//            toWrite.add(String.format("    <%s>%s</%s>", TAG_SPANNEDTEXT, textViewer.getText().substring(span.getStart(), span.getEnd()), TAG_SPANNEDTEXT));
+        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", TAG_ANNOTATOR, TAG_ANNOTATOR_ID, textTextAnnotation.getAnnotatorID(), textTextAnnotation.getAnnotatorName(), TAG_ANNOTATOR));
+        for (TextSpan textSpan : textTextAnnotation.getTextSpans()) {
+            toWrite.add(String.format("    <%s %s=\"%s\" %s=\"%s\" />", TAG_SPAN, TAG_SPAN_START, textSpan.getStart(), TAG_SPAN_END, textSpan.getEnd()));
+//            toWrite.add(String.format("    <%s>%s</%s>", TAG_SPANNEDTEXT, textViewer.getText().substring(textSpan.getStart(), textSpan.getEnd()), TAG_SPANNEDTEXT));
         }
-        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", TAG_MENTION_CLASS, TAG_MENTION_CLASS_ID, textAnnotation.getClassID(), textAnnotation.getClassName(), TAG_MENTION_CLASS));
+        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", TAG_MENTION_CLASS, TAG_MENTION_CLASS_ID, textTextAnnotation.getClassID(), textTextAnnotation.getClassName(), TAG_MENTION_CLASS));
         toWrite.add(String.format("  </%s>", TAG_CLASS_MENTION));
         toWrite.add(String.format("  </%s>", TAG_ANNOTATION));
 
@@ -89,29 +89,35 @@ public final class XmlUtil {
         bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         bw.newLine();
 
-        for (int i = 0; i < view.getTextViewer().getTabCount(); i++) {
-            KnowtatorTextPane textPane = view.getTextViewer().getTextPaneByIndex(i);
-            bw.write(String.format("<%s %s=\"%s\">", TAG_ANNOTATIONS, TAG_TEXTSOURCE, textPane.getName()));
-            bw.newLine();
-            textPane.getTextAnnotationManager().getTextAnnotations().forEach(textAnnotation ->  {
+        view.getTextAnnotationManager().getTextAnnotations().forEach((textSource, annotations) -> {
+            try {
+                bw.write(String.format("<%s %s=\"%s\">", TAG_ANNOTATIONS, TAG_TEXTSOURCE, textSource));
+                bw.newLine();
 
-//                String mention = String.format("%s_Instance_%d", textAnnotation.getMentionSource(), textAnnotation.getMentionID());
-                try {
-                    for (String tag : annotationToXML(textAnnotation)) {
-                        bw.write(tag);
-                        bw.newLine();
+                annotations.forEach(textAnnotation -> {
+
+                    //                String mention = String.format("%s_Instance_%d", textAnnotation.getMentionSource(), textAnnotation.getMentionID());
+                    try {
+                        for (String tag : annotationToXML(textAnnotation)) {
+                            bw.write(tag);
+                            bw.newLine();
+                        }
+
+                        //                    bw.write(String.format("  <%s %s=\"%s\">", TAG_CLASS_MENTION, TAG_CLASS_MENTION_ID, mention));
+                        //                    bw.newLine();
+
+                    } catch (IOException e) {
+                        log.error("IOException");
+                        e.printStackTrace();
                     }
+                });
 
-//                    bw.write(String.format("  <%s %s=\"%s\">", TAG_CLASS_MENTION, TAG_CLASS_MENTION_ID, mention));
-//                    bw.newLine();
-
-                } catch (IOException e) {
-                    log.error("IOException");
-                    e.printStackTrace();
-                }
-            });
-            bw.write(String.format("</%s>", TAG_ANNOTATIONS));
-        }
+                bw.write(String.format("</%s>", TAG_ANNOTATIONS));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
 
         bw.flush();
@@ -138,12 +144,12 @@ public final class XmlUtil {
 
             if (textPane != null) {
                 HashMap<String, Element> mentionTracker = mapMentionToAnnotationElement(textSourceElement);
-                addAnnotationsToKnowtator(textSourceElement, mentionTracker, textSource, textPane);
+                addAnnotationsToKnowtator(textSourceElement, mentionTracker, textSource);
             }
         }
     }
 
-    private void addAnnotationsToKnowtator(Element textSourceElement, HashMap<String, Element> mentionTracker, String textSource, KnowtatorTextPane textPane) {
+    private void addAnnotationsToKnowtator(Element textSourceElement, HashMap<String, Element> mentionTracker, String textSource) {
         /*
         Next parse classes and add the annotations
          */
@@ -164,7 +170,7 @@ public final class XmlUtil {
 
                 OWLClass cls = view.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
                 if (cls != null) {
-                    OWLAPIDataExtractor dataExtractor = textPane.getTextAnnotationManager().getDataExtractor();
+                    OWLAPIDataExtractor dataExtractor = view.getTextAnnotationManager().getDataExtractor();
                     try {
                         dataExtractor.extractOWLObjectData(cls);
                         className = dataExtractor.getClassName();
@@ -172,15 +178,15 @@ public final class XmlUtil {
                     } catch (NullPointerException e) {
                         className = classElement.getElementsByTagName(TAG_MENTION_CLASS).item(0).getTextContent();
                     }
-                    Annotation newAnnotation = new Annotation(textSource, cls);
-                    newAnnotation.setClassName(className);
-                    newAnnotation.setClassID(classID);
-                    newAnnotation.setAnnotatorName(annotatorName);
-                    newAnnotation.setAnnotatorID(annotatorID);
-                    newAnnotation.setSpans(getSpanInfo(annotationElement));
+                    TextAnnotation newTextAnnotation = new TextAnnotation(textSource, cls);
+                    newTextAnnotation.setClassName(className);
+                    newTextAnnotation.setClassID(classID);
+                    newTextAnnotation.setAnnotatorName(annotatorName);
+                    newTextAnnotation.setAnnotatorID(annotatorID);
+                    newTextAnnotation.setTextSpans(getSpanInfo(annotationElement));
 
                     try {
-                        textPane.getTextAnnotationManager().addTextAnnotation(newAnnotation);
+                        view.getTextAnnotationManager().addTextAnnotation(textSource, newTextAnnotation);
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     }
@@ -189,20 +195,20 @@ public final class XmlUtil {
         }
     }
 
-    private ArrayList<Span> getSpanInfo(Element annotationElement) {
-        ArrayList<Span> spans = new ArrayList<>();
+    private ArrayList<TextSpan> getSpanInfo(Element annotationElement) {
+        ArrayList<TextSpan> textSpans = new ArrayList<>();
         for (Node spanNode : asList(annotationElement.getElementsByTagName(TAG_SPAN))) {
             if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element spanElement = (Element) spanNode;
                 Integer spanStart = Integer.parseInt(spanElement.getAttribute(TAG_SPAN_START));
                 Integer spanEnd = Integer.parseInt(spanElement.getAttribute(TAG_SPAN_END));
 
-                Span newSpan = new Span(spanStart, spanEnd);
-                spans.add(newSpan);
+                TextSpan newTextSpan = new TextSpan(spanStart, spanEnd);
+                textSpans.add(newTextSpan);
             }
         }
-        log.warn(String.format("\t\tSpans: %d", spans.size()));
-        return spans;
+        log.warn(String.format("\t\tSpans: %d", textSpans.size()));
+        return textSpans;
     }
 
     private HashMap<String, Element> mapMentionToAnnotationElement(Element textSourceElement) {

@@ -29,7 +29,12 @@ public class OWLAPIDataExtractor {
     }
 
     private Collection<OWLAnnotation> getOWLObjectAnnotations(OWLEntity ent) {
-        return EntitySearcher.getAnnotations(ent.getIRI(), man.getActiveOntology());
+        if (ent != null) {
+            return EntitySearcher.getAnnotations(ent.getIRI(), man.getActiveOntology());
+        }
+        else {
+            return null;
+        }
     }
 
     private Collection<OWLAnnotationProperty> getOWLAnnotationProperties(OWLOntology ont) {

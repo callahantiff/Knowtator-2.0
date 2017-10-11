@@ -1,11 +1,11 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
 import com.mxgraph.swing.util.mxGraphActions;
-import com.mxgraph.util.mxResources;
 
 import javax.swing.*;
 
-public class GraphPopupMenu extends JPopupMenu
+@SuppressWarnings("PackageAccessibility")
+class GraphPopupMenu extends JPopupMenu
 {
 
 	/**
@@ -13,7 +13,7 @@ public class GraphPopupMenu extends JPopupMenu
 	 */
 	private static final long serialVersionUID = -3132749140550242191L;
 
-	public GraphPopupMenu(KnowtatorGraphViewer graphViewer)
+	GraphPopupMenu(KnowtatorGraphViewer graphViewer)
 	{
 		boolean selected = !graphViewer.getGraph().isSelectionEmpty();
 
@@ -34,6 +34,16 @@ public class GraphPopupMenu extends JPopupMenu
 //				TransferHandler.getPasteAction(),
 //				"/com/mxgraph/examples/swing/images/paste.gif"
 //		));
+
+//		add(graphViewer.bind(
+//				"collapse children",
+//				KnowtatorActions.getCollapseChildrenAction()
+//		));
+
+		add(graphViewer.bind(
+				"collapse children",
+				mxGraphActions.getCollapseAction()
+		));
 
 		addSeparator();
 

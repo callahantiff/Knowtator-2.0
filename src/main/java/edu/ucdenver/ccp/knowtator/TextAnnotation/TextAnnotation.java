@@ -26,7 +26,7 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.ucdenver.ccp.knowtator.iaa;
+package edu.ucdenver.ccp.knowtator.TextAnnotation;
 
 import edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -34,7 +34,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import java.util.*;
 
 @SuppressWarnings({"JavadocReference", "unused", "JavaDoc", "unchecked"})
-public class Annotation {
+public class TextAnnotation {
 
 	private String setName = "Set name not specified";
 
@@ -65,21 +65,21 @@ public class Annotation {
 
 	private String annotatorID = "AnnotatorID not specified";
 
-	private List<Span> spans;
+	private List<TextSpan> textSpans;
 
 	// key is a feature name, value is the value of the feature
 	private Map<String, Set<Object>> simpleFeatures;
 
-	private Map<String, Set<Annotation>> complexFeatures;
+	private Map<String, Set<TextAnnotation>> complexFeatures;
 
 	private int size = 0;
 	private OWLClass owlClass;
 
-	public Annotation(String docID, OWLClass owlClass) {
+	public TextAnnotation(String docID, OWLClass owlClass) {
 		this.docID = docID;
 		this.owlClass = owlClass;
 
-		spans = new ArrayList<>();
+		textSpans = new ArrayList<>();
 		simpleFeatures = new HashMap<>();
 		complexFeatures = new HashMap<>();
 	}
@@ -108,19 +108,19 @@ public class Annotation {
 		return owlClass;
 	}
 
-	public List<Span> getSpans() {
-		return Collections.unmodifiableList(spans);
+	public List<TextSpan> getTextSpans() {
+		return Collections.unmodifiableList(textSpans);
 	}
 
-	public void setSpans(List<Span> spans) {
-		this.spans.clear();
-		this.spans.addAll(spans);
-		Collections.sort(this.spans);
+	public void setTextSpans(List<TextSpan> textSpans) {
+		this.textSpans.clear();
+		this.textSpans.addAll(textSpans);
+		Collections.sort(this.textSpans);
 	}
 
-	public void setSpan(Span span) {
-		this.spans.clear();
-		this.spans.add(span);
+	public void setSpan(TextSpan textSpan) {
+		this.textSpans.clear();
+		this.textSpans.add(textSpan);
 	}
 
 	private Set<String> getSimpleFeatureNames() {
@@ -157,7 +157,7 @@ public class Annotation {
 		return Collections.unmodifiableSet(complexFeatures.keySet());
 	}
 
-	private Set<Annotation> getComplexFeatureValues(String featureName) {
+	private Set<TextAnnotation> getComplexFeatureValues(String featureName) {
 		if (complexFeatures.get(featureName) == null)
 			return Collections.emptySet();
 		return Collections.unmodifiableSet(complexFeatures.get(featureName));
@@ -167,14 +167,14 @@ public class Annotation {
 		return complexFeatures.containsKey(featureName);
 	}
 
-	public void setComplexFeature(String featureName, Set<Annotation> featureValues) {
+	public void setComplexFeature(String featureName, Set<TextAnnotation> featureValues) {
 		simpleFeatures.remove(featureName);
 		complexFeatures.put(featureName, new HashSet<>(featureValues));
 	}
 
-	public void setComplexFeature(String featureName, Annotation featureValue) {
+	public void setComplexFeature(String featureName, TextAnnotation featureValue) {
 		simpleFeatures.remove(featureName);
-		HashSet<Annotation> featureValues = new HashSet<>();
+		HashSet<TextAnnotation> featureValues = new HashSet<>();
 		featureValues.add(featureValue);
 		complexFeatures.put(featureName, featureValues);
 	}
@@ -186,17 +186,17 @@ public class Annotation {
 	}
 
 	/**
-	 * @param annotation1
-	 * @param annotation2
-	 * @return true if the annotations have the same spans
+	 * @param textAnnotation1
+	 * @param textAnnotation2
+	 * @return true if the annotations have the same textSpans
 	 */
-	static boolean spansMatch(Annotation annotation1, Annotation annotation2) {
-		return Span.spansMatch(annotation1.getSpans(), annotation2.getSpans());
+	public static boolean spansMatch(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+		return TextSpan.spansMatch(textAnnotation1.getTextSpans(), textAnnotation2.getTextSpans());
 	}
 
-	public static boolean spansMatch(List<Annotation> annotations) {
-		for (int i = 1; i < annotations.size(); i++) {
-			if (!spansMatch(annotations.get(0), annotations.get(i)))
+	public static boolean spansMatch(List<TextAnnotation> textAnnotations) {
+		for (int i = 1; i < textAnnotations.size(); i++) {
+			if (!spansMatch(textAnnotations.get(0), textAnnotations.get(i)))
 				return false;
 		}
 		return true;
@@ -206,16 +206,16 @@ public class Annotation {
 	 * returns true only if both annotations have the same non-null
 	 * annotationClass.
 	 */
-	private static boolean classesMatch(Annotation annotation1, Annotation annotation2) {
-		String cls1 = annotation1.getClassName();
-		String cls2 = annotation2.getClassName();
+	private static boolean classesMatch(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+		String cls1 = textAnnotation1.getClassName();
+		String cls2 = textAnnotation2.getClassName();
 
 		return cls1 != null && cls2 != null && cls1.equals(cls2);
 
 	}
 
-	static boolean spansOverlap(Annotation annotation1, Annotation annotation2) {
-		return Span.intersects(annotation1.getSpans(), annotation2.getSpans());
+	public static boolean spansOverlap(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+		return TextSpan.intersects(textAnnotation1.getTextSpans(), textAnnotation2.getTextSpans());
 	}
 
 	private static boolean compareNames(Set<String> names1, Set<String> names2) {
@@ -232,30 +232,30 @@ public class Annotation {
 	 * This method checks to see if two annotations have the same simple
 	 * features but does not compare the values of the features.
 	 * 
-	 * @param annotation1
-	 * @param annotation2
+	 * @param textAnnotation1
+	 * @param textAnnotation2
 	 * @return true if both annotations have the same number of simple features
 	 *         and they have the same names.
 	 */
-	public static boolean compareSimpleFeatureNames(Annotation annotation1, Annotation annotation2) {
-		return compareNames(annotation1.getSimpleFeatureNames(), annotation2.getSimpleFeatureNames());
+	public static boolean compareSimpleFeatureNames(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+		return compareNames(textAnnotation1.getSimpleFeatureNames(), textAnnotation2.getSimpleFeatureNames());
 	}
 
 	/**
 	 * This method checks to see if two annotations have the same complex
 	 * features but does not compare the values of the features.
 	 * 
-	 * @param annotation1
-	 * @param annotation2
+	 * @param textAnnotation1
+	 * @param textAnnotation2
 	 * @return true if both annotations have the same number of complex features
 	 *         and they have the same names.
 	 */
-	public static boolean compareComplexFeatureNames(Annotation annotation1, Annotation annotation2) {
-		return compareNames(annotation1.getComplexFeatureNames(), annotation2.getComplexFeatureNames());
+	public static boolean compareComplexFeatureNames(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+		return compareNames(textAnnotation1.getComplexFeatureNames(), textAnnotation2.getComplexFeatureNames());
 	}
 
-	public static boolean compareFeatureNames(Annotation annotation1, Annotation annotation2) {
-		return compareNames(annotation1.getFeatureNames(), annotation2.getFeatureNames());
+	public static boolean compareFeatureNames(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+		return compareNames(textAnnotation1.getFeatureNames(), textAnnotation2.getFeatureNames());
 	}
 
 	/**
@@ -306,8 +306,8 @@ public class Annotation {
 
 	/**
 	 * 
-	 * @param annotation1
-	 * @param annotation2
+	 * @param textAnnotation1
+	 * @param textAnnotation2
 	 * @param featureName
 	 *            the name of the feature that will be compared between the two
 	 *            annotations
@@ -323,18 +323,18 @@ public class Annotation {
 	 * @see #trivialCompare(Set, Set)
 	 */
 
-	private static int compareSimpleFeature(Annotation annotation1, Annotation annotation2, String featureName) {
-		// if(!annotation1.isSimpleFeature(featureName) ||
-		// !annotation2.isSimpleFeature(featureName)) return
+	private static int compareSimpleFeature(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, String featureName) {
+		// if(!textAnnotation1.isSimpleFeature(featureName) ||
+		// !textAnnotation2.isSimpleFeature(featureName)) return
 		// MatchResult.TRIVIAL_NONMATCH;
 
-		int trivialResult = trivialCompare(annotation1.getSimpleFeatureValues(featureName), annotation2
+		int trivialResult = trivialCompare(textAnnotation1.getSimpleFeatureValues(featureName), textAnnotation2
 				.getSimpleFeatureValues(featureName));
 		if (trivialResult != MatchResult.MATCH_RESULT_UNASSIGNED)
 			return trivialResult;
 
-		Set<Object> featureValues1 = annotation1.getSimpleFeatureValues(featureName);
-		Set<Object> featureValues2 = new HashSet<>(annotation2.getSimpleFeatureValues(featureName));
+		Set<Object> featureValues1 = textAnnotation1.getSimpleFeatureValues(featureName);
+		Set<Object> featureValues2 = new HashSet<>(textAnnotation2.getSimpleFeatureValues(featureName));
 
 		for (Object featureValue : featureValues1) {
 			if (!featureValues2.contains(featureValue)) {
@@ -350,8 +350,8 @@ public class Annotation {
 	/**
 	 * Compares all of the simple features of two annotations
 	 * 
-	 * @param annotation1
-	 * @param annotation2
+	 * @param textAnnotation1
+	 * @param textAnnotation2
 	 * @return <ul>
 	 * 
 	 *         <li>TRIVIAL_NONMATCH if any of the simple features are trivial
@@ -368,21 +368,21 @@ public class Annotation {
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_MATCH
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
-	public static int compareSimpleFeatures(Annotation annotation1, Annotation annotation2) {
-		Set<String> featureNames = new HashSet<>(annotation1.getSimpleFeatureNames());
-		featureNames.addAll(annotation2.getSimpleFeatureNames());
+	public static int compareSimpleFeatures(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+		Set<String> featureNames = new HashSet<>(textAnnotation1.getSimpleFeatureNames());
+		featureNames.addAll(textAnnotation2.getSimpleFeatureNames());
 
 		if (featureNames.size() == 0)
 			return MatchResult.TRIVIAL_MATCH;
 
-		return compareSimpleFeatures(annotation1, annotation2, featureNames);
+		return compareSimpleFeatures(textAnnotation1, textAnnotation2, featureNames);
 	}
 
 	/**
 	 * Compares the simple features of two annotations named in featureNames
 	 * 
-	 * @param annotation1
-	 * @param annotation2
+	 * @param textAnnotation1
+	 * @param textAnnotation2
 	 * @param featureNames
 	 *            the simple features to compare.
 	 * @return <ul>
@@ -398,21 +398,21 @@ public class Annotation {
 	 *         <li>TRIVIAL_MATCH if featureNames is an empty set or null.
 	 *         <li>NONTRIVIAL_MATH all simple features match and are non-trivial
 	 *         </ul>
-	 * @see edu.uchsc.ccp.iaa.Annotation#compareSimpleFeature(Annotation,
-	 *      Annotation, String)
+	 * @see edu.uchsc.ccp.iaa.Annotation#compareSimpleFeature(TextAnnotation,
+	 *      TextAnnotation, String)
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_MATCH
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
-	public static int compareSimpleFeatures(Annotation annotation1, Annotation annotation2, Set<String> featureNames) {
+	public static int compareSimpleFeatures(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, Set<String> featureNames) {
 		if (featureNames == null || featureNames.size() == 0)
 			return MatchResult.TRIVIAL_MATCH;
 		boolean trivialMatch = false;
 		boolean nonmatch = false;
 
 		for (String featureName : featureNames) {
-			int result = compareSimpleFeature(annotation1, annotation2, featureName);
+			int result = compareSimpleFeature(textAnnotation1, textAnnotation2, featureName);
 			if (result == MatchResult.TRIVIAL_NONMATCH) {
 				return result;
 			} else if (result == MatchResult.TRIVIAL_MATCH) {
@@ -434,17 +434,17 @@ public class Annotation {
 	 * (typically one - but can be more). The parameters to this method
 	 * determine how the feature values should be compared.
 	 * 
-	 * @param annotation1
-	 * @param annotation2
+	 * @param textAnnotation1
+	 * @param textAnnotation2
 	 * @param complexFeatureName
 	 *            the name of the feature that will be compared between the two
 	 *            annotations
 	 * @param complexFeatureSpanComparison
-	 *            specifies how the spans of the feature values should be
+	 *            specifies how the textSpans of the feature values should be
 	 *            compared. The value of this parameter must be one of
 	 *            SPANS_OVERLAP_COMPARISON, SPANS_EXACT_COMPARISON, or
 	 *            IGNORE_SPANS_COMPARISON. If IGNORE_SPANS_COMPARISON is passed
-	 *            in, then the spans will be considered as matching.
+	 *            in, then the textSpans will be considered as matching.
 	 * @param complexFeatureClassComparison
 	 *            specifies how the classes of the feature values should be
 	 *            compared. If true, then the classes will be compared and will
@@ -481,15 +481,15 @@ public class Annotation {
 	 *         defined by the match parameters.
 	 * 
 	 */
-	public static int compareComplexFeature(Annotation annotation1, Annotation annotation2, String complexFeatureName,
-			int complexFeatureSpanComparison, boolean complexFeatureClassComparison,
-			Set<String> simpleFeatureNamesOfComplexFeature, boolean trivialSimpleFeatureMatchesCauseTrivialMatch) {
-		// if(!annotation1.isComplexFeature(complexFeatureName) ||
-		// !annotation2.isComplexFeature(complexFeatureName)) return
+	public static int compareComplexFeature(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, String complexFeatureName,
+											int complexFeatureSpanComparison, boolean complexFeatureClassComparison,
+											Set<String> simpleFeatureNamesOfComplexFeature, boolean trivialSimpleFeatureMatchesCauseTrivialMatch) {
+		// if(!textAnnotation1.isComplexFeature(complexFeatureName) ||
+		// !textAnnotation2.isComplexFeature(complexFeatureName)) return
 		// MatchResult.TRIVIAL_NONMATCH;
 
-		Set<Annotation> featureValues1 = annotation1.getComplexFeatureValues(complexFeatureName);
-		Set<Annotation> featureValues2 = new HashSet<>(annotation2
+		Set<TextAnnotation> featureValues1 = textAnnotation1.getComplexFeatureValues(complexFeatureName);
+		Set<TextAnnotation> featureValues2 = new HashSet<>(textAnnotation2
 				.getComplexFeatureValues(complexFeatureName));
 
 		int trivialResult = trivialCompare(featureValues1, featureValues2);
@@ -498,11 +498,11 @@ public class Annotation {
 			return trivialResult;
 
 		boolean trivialSimpleFeatureMatch = false;
-		for (Annotation featureValue1 : featureValues1) {
-			Annotation matchedFeature = null;
+		for (TextAnnotation featureValue1 : featureValues1) {
+			TextAnnotation matchedFeature = null;
 			int matchedFeatureResult = MatchResult.MATCH_RESULT_UNASSIGNED;
 
-			for (Annotation featureValue2 : featureValues2) {
+			for (TextAnnotation featureValue2 : featureValues2) {
 				int result = compareAnnotations(featureValue1, featureValue2, complexFeatureSpanComparison,
 						complexFeatureClassComparison, simpleFeatureNamesOfComplexFeature);
 				if (result == MatchResult.NONTRIVIAL_MATCH) {
@@ -539,15 +539,15 @@ public class Annotation {
 	public static final int IGNORE_SPANS_COMPARISON = 3;
 
 	/**
-	 * This method compares two annotations with respect to their spans,
+	 * This method compares two annotations with respect to their textSpans,
 	 * annotation classes and simple features.
 	 * 
-	 * @param annotation1
-	 * @param annotation2
+	 * @param textAnnotation1
+	 * @param textAnnotation2
 	 * @param spanComparison
 	 *            must be one of SPANS_OVERLAP_COMPARISON,
 	 *            SPANS_EXACT_COMPARISON, or IGNORE_SPANS_COMPARISON. If
-	 *            IGNORE_SPANS_COMPARISON is passed in, then the spans will be
+	 *            IGNORE_SPANS_COMPARISON is passed in, then the textSpans will be
 	 *            considered as matching.
 	 * @param compareClass
 	 *            if true, then the classes will be compared and will be
@@ -556,24 +556,24 @@ public class Annotation {
 	 *            matching.
 	 * @param simpleFeatureNames
 	 *            the simple features that will be compared.
-	 * @return MatchResult.TRIVIAL_NONMATCH if the spans do not match.
+	 * @return MatchResult.TRIVIAL_NONMATCH if the textSpans do not match.
 	 *         MatchResult.TRIVIAL_NONMATCH if the classes do not match.
-	 *         MatchResult.TRIVIAL_MATCH if spans and classes match and
-	 *         simpleFeatureNames is empty or null. If spans and classes match,
-	 *         then the result of compareSimpleFeatures(Annotation, Annotation,
+	 *         MatchResult.TRIVIAL_MATCH if textSpans and classes match and
+	 *         simpleFeatureNames is empty or null. If textSpans and classes match,
+	 *         then the result of compareSimpleFeatures(TextAnnotation, TextAnnotation,
 	 *         Set<String>) is returned.
-	 * @see edu.uchsc.ccp.iaa.Annotation#compareSimpleFeatures(Annotation,
-	 *      Annotation, Set)
+	 * @see edu.uchsc.ccp.iaa.Annotation#compareSimpleFeatures(TextAnnotation,
+	 *      TextAnnotation, Set)
 	 */
 
-	private static int compareAnnotations(Annotation annotation1, Annotation annotation2, int spanComparison,
+	private static int compareAnnotations(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, int spanComparison,
 										  boolean compareClass, Set<String> simpleFeatureNames) {
 		boolean spansMatch = false;
 		boolean classesMatch = false;
 
-		if (spanComparison == SPANS_OVERLAP_COMPARISON && spansOverlap(annotation1, annotation2))
+		if (spanComparison == SPANS_OVERLAP_COMPARISON && spansOverlap(textAnnotation1, textAnnotation2))
 			spansMatch = true;
-		else if (spanComparison == SPANS_EXACT_COMPARISON && spansMatch(annotation1, annotation2))
+		else if (spanComparison == SPANS_EXACT_COMPARISON && spansMatch(textAnnotation1, textAnnotation2))
 			spansMatch = true;
 		else if (spanComparison == IGNORE_SPANS_COMPARISON)
 			spansMatch = true;
@@ -586,7 +586,7 @@ public class Annotation {
 		if (!spansMatch)
 			return MatchResult.TRIVIAL_NONMATCH;
 
-		if (compareClass && classesMatch(annotation1, annotation2))
+		if (compareClass && classesMatch(textAnnotation1, textAnnotation2))
 			classesMatch = true;
 		else if (!compareClass)
 			classesMatch = true;
@@ -594,35 +594,35 @@ public class Annotation {
 		if (!classesMatch)
 			return MatchResult.TRIVIAL_NONMATCH;
 
-		return compareSimpleFeatures(annotation1, annotation2, simpleFeatureNames);
+		return compareSimpleFeatures(textAnnotation1, textAnnotation2, simpleFeatureNames);
 
 	}
 
 	/**
-	 * Returns the text covered by an annotation.
+	 * Returns the text covered by an textAnnotation.
 	 * 
-	 * @param annotation
-	 *            an annotation that has spans corresponding to extents of
+	 * @param textAnnotation
+	 *            an textAnnotation that has textSpans corresponding to extents of
 	 *            annotationText
 	 * @param annotationText
-	 *            the text from which an annotation corresponds to.
+	 *            the text from which an textAnnotation corresponds to.
 	 * @param spanSeparator
 	 *            if more than one span exists, then this String will be
 	 *            inserted between each segment of text.
-	 * @return the text covered by an annotation.
+	 * @return the text covered by an textAnnotation.
 	 */
-	public static String getCoveredText(Annotation annotation, String annotationText, String spanSeparator) {
-		List<Span> spans = annotation.getSpans();
-		if (spans == null || spans.size() == 0)
+	public static String getCoveredText(TextAnnotation textAnnotation, String annotationText, String spanSeparator) {
+		List<TextSpan> textSpans = textAnnotation.getTextSpans();
+		if (textSpans == null || textSpans.size() == 0)
 			return "";
-		else if (spans.size() == 1) {
-			return Span.substring(annotationText, spans.get(0));
+		else if (textSpans.size() == 1) {
+			return TextSpan.substring(annotationText, textSpans.get(0));
 		} else {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Span.substring(annotationText, spans.get(0)));
-			for (int i = 1; i < spans.size(); i++) {
+			sb.append(TextSpan.substring(annotationText, textSpans.get(0)));
+			for (int i = 1; i < textSpans.size(); i++) {
 				sb.append(spanSeparator);
-				sb.append(Span.substring(annotationText, spans.get(i)));
+				sb.append(TextSpan.substring(annotationText, textSpans.get(i)));
 			}
 			return sb.toString();
 		}
@@ -631,14 +631,14 @@ public class Annotation {
 	/**
 	 * @return the size of the span associated with the annotation. If the
 	 *         annotation has more than one span, then the sum of the size of
-	 *         the spans is returned.
+	 *         the textSpans is returned.
 	 */
 
 	public int getSize() {
 		if (size == 0) {
-			List<Span> spans = getSpans();
-			for (Span span : spans) {
-				size += span.getSize();
+			List<TextSpan> textSpans = getTextSpans();
+			for (TextSpan textSpan : textSpans) {
+				size += textSpan.getSize();
 			}
 			return size;
 		} else
@@ -648,28 +648,28 @@ public class Annotation {
 	/**
 	 * This method returns the shortest annotation - that is the annotation
 	 * whose span is the shortest. If an annotation has more than one span, then
-	 * its size is the sum of the size of each of its spans.
+	 * its size is the sum of the size of each of its textSpans.
 	 * 
-	 * @param annotations
+	 * @param textAnnotations
 	 * @return will only return one annotation. In the case of a tie, will
 	 *         return the first annotation with the smallest size encountered
-	 *         during iteration. Returns null if annotations is null or empty.
+	 *         during iteration. Returns null if textAnnotations is null or empty.
 	 */
-	public static Annotation getShortestAnnotation(Collection<Annotation> annotations) {
-		if (annotations == null || annotations.size() == 0)
+	public static TextAnnotation getShortestAnnotation(Collection<TextAnnotation> textAnnotations) {
+		if (textAnnotations == null || textAnnotations.size() == 0)
 			return null;
 
-		Annotation shortestAnnotation = null;
+		TextAnnotation shortestTextAnnotation = null;
 		int shortestAnnotationLength = -1;
 
-		for (Annotation annotation : annotations) {
-			int annotationSize = annotation.getSize();
+		for (TextAnnotation textAnnotation : textAnnotations) {
+			int annotationSize = textAnnotation.getSize();
 			if (shortestAnnotationLength == -1 || annotationSize < shortestAnnotationLength) {
-				shortestAnnotation = annotation;
+				shortestTextAnnotation = textAnnotation;
 				shortestAnnotationLength = annotationSize;
 			}
 		}
-		return shortestAnnotation;
+		return shortestTextAnnotation;
 	}
 
 	/**
@@ -685,9 +685,9 @@ public class Annotation {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ul><li>").append(setName).append("</li>");
 		sb.append("<li>class = ").append(className).append("</li>");
-		sb.append("<li>spans = ");
-		for (Span span : spans)
-			sb.append(span.toString()).append(" ");
+		sb.append("<li>textSpans = ");
+		for (TextSpan textSpan : textSpans)
+			sb.append(textSpan.toString()).append(" ");
 		sb.append("</li>");
 
 		if (simpleFeatures.size() > 0) {
@@ -698,8 +698,8 @@ public class Annotation {
 		if (printComplexFeatures && complexFeatures.size() > 0) {
 			for (String featureName : complexFeatures.keySet()) {
 				sb.append("<li>").append(featureName).append(" = ");
-				Set<Annotation> features = complexFeatures.get(featureName);
-				for (Annotation feature : features) {
+				Set<TextAnnotation> features = complexFeatures.get(featureName);
+				for (TextAnnotation feature : features) {
 					sb.append(feature.toHTML(false));
 				}
 			}
@@ -711,7 +711,7 @@ public class Annotation {
 	@Override
 	public String toString() {
 		System.out.println();
-		return String.format("Annotation: %s\n%s", super.toString().split("@")[1], classID);
+		return String.format("TextAnnotation: %s\n%s", super.toString().split("@")[1], classID);
 	}
 
 	public void setClassID(String classID) {
