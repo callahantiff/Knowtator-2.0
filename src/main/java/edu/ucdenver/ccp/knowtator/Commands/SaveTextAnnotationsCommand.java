@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.Commands;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
-import edu.ucdenver.ccp.knowtator.xml.XmlUtil;
 import org.protege.editor.core.ui.view.DisposableAction;
 
 import javax.swing.*;
@@ -13,11 +13,11 @@ import java.io.IOException;
 
 public class SaveTextAnnotationsCommand extends DisposableAction {
 
-    public XmlUtil xmlUtil;
+    private KnowtatorView view;
 
-    public SaveTextAnnotationsCommand(XmlUtil xmlUtil) {
+    public SaveTextAnnotationsCommand(KnowtatorView view) {
         super("Save to XML", KnowtatorIcons.getIcon(KnowtatorIcons.SAVE_ANNOTATIONS_ICON));
-        this.xmlUtil = xmlUtil;
+        this.view = view;
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Save annotations to XML file");
 
@@ -39,7 +39,7 @@ public class SaveTextAnnotationsCommand extends DisposableAction {
             try {
 
                 fw = new FileWriter(fileChooser.getSelectedFile().getAbsolutePath());
-                xmlUtil.write(fw);
+                view.getXmlUtil().write(fw);
                 fw.close();
             } catch (IOException | NoSuchFieldException e1) {
                 e1.printStackTrace();

@@ -28,7 +28,7 @@ public class XmlReader {
         this.dataExtractor = dataExtractor;
     }
 
-    public void loadTextAnnotationsFromXML(InputStream is) throws ParserConfigurationException, IOException, SAXException {
+    public void read(InputStream is) throws ParserConfigurationException, IOException, SAXException {
         /*
         doc parses the XML into a graph
          */

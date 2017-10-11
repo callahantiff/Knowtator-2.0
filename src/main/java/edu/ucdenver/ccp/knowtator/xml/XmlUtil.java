@@ -1,10 +1,7 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
-import edu.ucdenver.ccp.knowtator.Actions.KnowtatorActions;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
-import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,11 +28,11 @@ public final class XmlUtil {
     }
 
     public void read(InputStream is) throws IOException, SAXException, ParserConfigurationException {
-        xmlReader.loadTextAnnotationsFromXML(is);
+        xmlReader.read(is);
     }
 
     public void write(FileWriter fw) throws IOException, NoSuchFieldException {
-        xmlWriter.writeTextAnnotationsToXML(fw);
+        xmlWriter.write(fw);
     }
 
     public static List<Node> asList(NodeList n) {

@@ -86,14 +86,14 @@ public class KnowtatorViewImpl extends KnowtatorView {
         addAction(new OpenDocumentCommand(this), "A", "A");
         addAction(new CloseDocumentCommand(this), "A", "B");
 
-        addAction(new IncreaseTextSizeCommand(textViewer), "A", "C");
-        addAction(new DecreaseTextSizeCommand(textViewer), "A", "D");
+        addAction(new IncreaseTextSizeCommand(this), "A", "C");
+        addAction(new DecreaseTextSizeCommand(this), "A", "D");
 
         /*
         Text annotation related actions
          */
-        addAction(new LoadTextAnnotationsCommand(xmlUtil), "B", "A");
-        addAction(new SaveTextAnnotationsCommand(xmlUtil), "B", "B");
+        addAction(new LoadTextAnnotationsCommand(this), "B", "A");
+        addAction(new SaveTextAnnotationsCommand(this), "B", "B");
 
         addAction(new RunIAACommand(this), "B", "E");
 
@@ -105,9 +105,9 @@ public class KnowtatorViewImpl extends KnowtatorView {
         /*
         Annotator and highlighter related commands
          */
-        addAction(new NewProfileCommand(profileManager), "C", "A");
-        addAction(new SwitchProfileCommand(profileManager), "C", "B");
-        addAction(new NewHighlighterCommand(selectionModel, profileManager), "C", "C");
+        addAction(new NewProfileCommand(this), "C", "A");
+        addAction(new SwitchProfileCommand(this), "C", "B");
+        addAction(new NewHighlighterCommand(this), "C", "C");
 
         /*
         Graph Viewer related commands

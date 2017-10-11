@@ -34,7 +34,7 @@ public class XmlWriter {
         return toWrite;
     }
 
-    public void writeTextAnnotationsToXML(FileWriter fw) throws IOException, NoSuchFieldException {
+    public void write(FileWriter fw) throws IOException, NoSuchFieldException {
         BufferedWriter bw = new BufferedWriter(fw);
 
         bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -46,30 +46,22 @@ public class XmlWriter {
                 bw.newLine();
 
                 annotations.forEach(textAnnotation -> {
-
-                    //                String mention = String.format("%s_Instance_%d", textAnnotation.getMentionSource(), textAnnotation.getMentionID());
                     try {
                         for (String tag : annotationToXML(textAnnotation)) {
                             bw.write(tag);
                             bw.newLine();
                         }
-
-                        //                    bw.write(String.format("  <%s %s=\"%s\">", TAG_CLASS_MENTION, TAG_CLASS_MENTION_ID, mention));
-                        //                    bw.newLine();
-
                     } catch (IOException e) {
                         log.error("IOException");
                         e.printStackTrace();
                     }
                 });
-
                 bw.write(String.format("</%s>", XmlTags.TAG_ANNOTATIONS));
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
         });
-
 
         bw.flush();
     }
