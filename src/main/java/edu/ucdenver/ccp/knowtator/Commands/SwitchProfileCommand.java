@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 
 public class SwitchProfileCommand extends DisposableAction {
 
-    private ProfileManager profileManager;
+    public ProfileManager profileManager;
 
     public SwitchProfileCommand(ProfileManager profileManager) {
         super("Switch Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.SWITCH_PROFILE_ICON));
@@ -30,7 +30,7 @@ public class SwitchProfileCommand extends DisposableAction {
         switchProfile();
     }
 
-    private void switchProfile() {
+    public void switchProfile() {
         String[] profiles = profileManager.getProfiles().keySet().toArray(new String[profileManager.getProfiles().keySet().size()]);
         String profileName = ListDialog.showDialog(null, null, "Profiles", "Annotator Chooser", profiles, profiles[0], null);
 

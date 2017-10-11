@@ -18,20 +18,20 @@ import java.awt.event.MouseEvent;
 @SuppressWarnings("PackageAccessibility")
 public class KnowtatorGraphViewer extends JPanel {
 
-    private Object parent;
+    public Object parent;
 
     mxGraph getGraph() {
         return graph;
     }
 
-    private mxGraphComponent getGraphComponent() {
+    public mxGraphComponent getGraphComponent() {
         return graphComponent;
     }
 
-    private mxGraph graph;
+    public mxGraph graph;
 
-    private mxGraphComponent graphComponent;
-    private KnowtatorView view;
+    public mxGraphComponent graphComponent;
+    public KnowtatorView view;
 
     public KnowtatorGraphViewer(KnowtatorView view) {
         this.view = view;
@@ -153,7 +153,7 @@ public class KnowtatorGraphViewer extends JPanel {
         return newAction;
     }
 
-    private void showGraphPopupMenu(MouseEvent e)
+    public void showGraphPopupMenu(MouseEvent e)
     {
         Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
                 graphComponent);

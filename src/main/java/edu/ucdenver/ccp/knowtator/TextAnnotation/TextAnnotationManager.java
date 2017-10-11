@@ -17,18 +17,18 @@ import java.util.*;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public final class TextAnnotationManager {
-    private static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public static final Logger log = Logger.getLogger(KnowtatorView.class);
 
-    private HashMap<String, Collection<TextAnnotation>> textAnnotations;
-    private TextAnnotation selectedTextAnnotation;
-    private KnowtatorView view;
-    private KnowtatorSelectionModel selectionModel;
+    public HashMap<String, Collection<TextAnnotation>> textAnnotations;
+    public TextAnnotation selectedTextAnnotation;
+    public KnowtatorView view;
+    public KnowtatorSelectionModel selectionModel;
     public OWLAPIDataExtractor getDataExtractor() {
         return dataExtractor;
     }
-    private OWLAPIDataExtractor dataExtractor;
+    public OWLAPIDataExtractor dataExtractor;
 
-    private ArrayList<AssertionRelationship> assertionRelationships;
+    public ArrayList<AssertionRelationship> assertionRelationships;
 
     public TextAnnotationManager(KnowtatorView view) {
         this.view = view;
@@ -109,7 +109,7 @@ public final class TextAnnotationManager {
         highlightAllAnnotations();
     }
 
-    private void highlightAllAnnotations() {
+    public void highlightAllAnnotations() {
         for(KnowtatorTextPane textPane: view.getTextViewer().getAllTextPanes()) {
             textPane.getHighlighter().removeAllHighlights();
             textAnnotations.forEach((textSource, annotations) -> {
@@ -122,7 +122,7 @@ public final class TextAnnotationManager {
         }
     }
 
-    private void highlightAnnotation(int spanStart, int spanEnd, OWLClass cls, String textSource) {
+    public void highlightAnnotation(int spanStart, int spanEnd, OWLClass cls, String textSource) {
         DefaultHighlighter.DefaultHighlightPainter highlighter = view.getProfileManager().getCurrentAnnotator().getHighlighter(cls);
         if (highlighter == null) {
             Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", cls.toString()), Color.CYAN);

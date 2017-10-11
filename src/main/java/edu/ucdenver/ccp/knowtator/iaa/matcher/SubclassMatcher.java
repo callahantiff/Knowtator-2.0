@@ -44,11 +44,11 @@ import java.util.Set;
 @SuppressWarnings({"JavadocReference", "JavaDoc", "unused"})
 public class SubclassMatcher implements Matcher {
 
-	private String className;
+	public String className;
 
-	private Set<String> subclassNames;
+	public Set<String> subclassNames;
 
-	private ClassHierarchy hierarchy;
+	public ClassHierarchy hierarchy;
 
 	public SubclassMatcher(ClassHierarchy hierarchy) {
 		this.hierarchy = hierarchy;

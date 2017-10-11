@@ -35,9 +35,9 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class TextSpan implements Comparable {
-	private int start;
+	public int start;
 
-	private int end;
+	public int end;
 
 	public TextSpan(int start, int end) {
 		this.start = start;
@@ -115,7 +115,7 @@ public class TextSpan implements Comparable {
 	/**
 	 * we need some junit tests
 	 */
-	private boolean intersects(TextSpan textSpan) {
+	public boolean intersects(TextSpan textSpan) {
 		int spanStart = textSpan.getStart();
 		// either textSpan's start is in this or this' start is in textSpan
 		return this.contains(textSpan)

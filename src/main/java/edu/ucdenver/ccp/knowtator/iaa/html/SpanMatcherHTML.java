@@ -123,7 +123,7 @@ public class SpanMatcherHTML {
 		html.close();
 	}
 
-	private static Map<String, int[]> errorMatrix(Set<TextAnnotation> matches, Map<TextAnnotation, Set<TextAnnotation>> matchSets) {
+	public static Map<String, int[]> errorMatrix(Set<TextAnnotation> matches, Map<TextAnnotation, Set<TextAnnotation>> matchSets) {
 		Map<String, int[]> counts = new HashMap<>();
 
 		for (TextAnnotation match : matches) {

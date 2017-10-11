@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 
 public class NewProfileCommand extends DisposableAction {
 
-    private ProfileManager profileManager;
+    public ProfileManager profileManager;
 
     public NewProfileCommand(ProfileManager profileManager) {
         super("New Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.NEW_PROFILE_ICON));
@@ -29,7 +29,7 @@ public class NewProfileCommand extends DisposableAction {
         setAnnotator();
     }
 
-    private void setAnnotator() {
+    public void setAnnotator() {
         JTextField field1 = new JTextField();
         JTextField field2 = new JTextField();
         Object[] message = {

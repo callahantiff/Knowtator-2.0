@@ -18,15 +18,15 @@ import java.util.Objects;
 
 @SuppressWarnings("PackageAccessibility")
 public class KnowtatorTextViewer extends JTabbedPane {
-    private static final Logger log = Logger.getLogger(KnowtatorView.class);
-    private KnowtatorView view;
+    public static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public KnowtatorView view;
 
     public KnowtatorTextViewer(KnowtatorView view) {
         super();
         this.view = view;
     }
 
-    private void addNewDocument(String fileName, Boolean fromResources) {
+    public void addNewDocument(String fileName, Boolean fromResources) {
         log.warn(String.format("Name: %s", FilenameUtils.getBaseName(fileName)));
         KnowtatorTextPane textPane = new KnowtatorTextPane(view);
         textPane.setName(FilenameUtils.getBaseName(fileName));
@@ -61,9 +61,9 @@ public class KnowtatorTextViewer extends JTabbedPane {
             try {
                 if (fromResources) {
                     log.warn("Loading annotations from resources");
-                    view.getXmlUtil().loadTextAnnotationsFromXML(getClass().getResourceAsStream(annotationFileName));
+                    view.getXmlUtil().read(getClass().getResourceAsStream(annotationFileName));
                 } else {
-                    view.getXmlUtil().loadTextAnnotationsFromXML(new FileInputStream(annotationFileName));
+                    view.getXmlUtil().read(new FileInputStream(annotationFileName));
                 }
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 e.printStackTrace();

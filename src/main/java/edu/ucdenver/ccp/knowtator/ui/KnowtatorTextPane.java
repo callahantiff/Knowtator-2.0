@@ -15,8 +15,8 @@ import java.awt.event.MouseListener;
 
 public class KnowtatorTextPane extends JTextPane {
 
-	private final KnowtatorView view;
-	private static final Logger log = Logger.getLogger(KnowtatorView.class);
+	public final KnowtatorView view;
+	public static final Logger log = Logger.getLogger(KnowtatorView.class);
 
 	public KnowtatorTextPane(KnowtatorView view) {
 		super();
@@ -26,7 +26,7 @@ public class KnowtatorTextPane extends JTextPane {
 		setupListeners();
 	}
 
-	private void setupListeners() {
+	public void setupListeners() {
 		KnowtatorTextPane textPane = this;
 		addMouseListener(
 				new MouseListener() {
@@ -83,7 +83,7 @@ public class KnowtatorTextPane extends JTextPane {
 		);
 	}
 
-	private void showPopUpMenu(MouseEvent e) {
+	public void showPopUpMenu(MouseEvent e) {
 		JPopupMenu popupMenu = new JPopupMenu();
 
 		// Menu item to create new annotation
@@ -105,7 +105,7 @@ public class KnowtatorTextPane extends JTextPane {
 		popupMenu.show(e.getComponent(), e.getX(), e.getY());
 	}
 
-	private void addTextAnnotation() {
+	public void addTextAnnotation() {
 		OWLClass cls = view.getSelectionModel().getSelectedClass();
 		if (cls != null) {
 			try {

@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.Actions;
 
 import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

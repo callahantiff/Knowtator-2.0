@@ -7,9 +7,9 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public class KnowtatorSelectionModel {
 
-    private OWLClass selectedClass;
+    public OWLClass selectedClass;
 
-    private ArrayList<KnowtatorSelectionListener> listeners;
+    public ArrayList<KnowtatorSelectionListener> listeners;
 
 
     KnowtatorSelectionModel() {
@@ -54,7 +54,7 @@ public class KnowtatorSelectionModel {
         listeners.remove(listener);
     }
 
-    private void fireSelectionChanged() {
+    public void fireSelectionChanged() {
         for (KnowtatorSelectionListener lsnr : listeners) {
             lsnr.selectionChanged(this);
         }

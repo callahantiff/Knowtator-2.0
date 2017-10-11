@@ -12,7 +12,7 @@ import java.util.List;
 
 public class KnowtatorViewImpl extends KnowtatorView {
 
-    private static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public static final Logger log = Logger.getLogger(KnowtatorView.class);
 
     @Override
     public void initialiseClassView() {
@@ -25,7 +25,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
         log.warn("Initialized Knowtator");
     }
 
-    private void createUI() {
+    public void createUI() {
         setLayout(new BorderLayout());
 
         /*
@@ -56,7 +56,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
     /**
      * TODO make initial document the last document that was edited
      */
-    private void setupInitial() {
+    public void setupInitial() {
         /*
         Load GO ontology
          */
@@ -79,7 +79,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
     /**
      * Add buttons corresponding to each of the actions to the toolbar
      */
-    private void createToolBar() {
+    public void createToolBar() {
         /*
         Text document related actions
          */
@@ -92,8 +92,8 @@ public class KnowtatorViewImpl extends KnowtatorView {
         /*
         Text annotation related actions
          */
-        addAction(new LoadAnnotationsCommand(xmlUtil), "B", "A");
-        addAction(new SaveAnnotationsToXmlCommand(xmlUtil), "B", "B");
+        addAction(new LoadTextAnnotationsCommand(xmlUtil), "B", "A");
+        addAction(new SaveTextAnnotationsCommand(xmlUtil), "B", "B");
 
         addAction(new RunIAACommand(this), "B", "E");
 

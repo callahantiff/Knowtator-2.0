@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 
 public class IncreaseTextSizeCommand extends DisposableAction {
 
-    private final JTabbedPane tabbedPane;
+    public final JTabbedPane tabbedPane;
 
     public IncreaseTextSizeCommand(JTabbedPane tabbedPane) {
         super("Increase Text Size", KnowtatorIcons.getIcon(KnowtatorIcons.INCREASE_TEXT_SIZE_ICON));
@@ -26,7 +26,7 @@ public class IncreaseTextSizeCommand extends DisposableAction {
 
     }
 
-    private void increaseTextSize() {
+    public void increaseTextSize() {
         KnowtatorTextPane textViewer = (KnowtatorTextPane)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
         StyledDocument doc = textViewer.getStyledDocument();
         MutableAttributeSet attrs = textViewer.getInputAttributes();

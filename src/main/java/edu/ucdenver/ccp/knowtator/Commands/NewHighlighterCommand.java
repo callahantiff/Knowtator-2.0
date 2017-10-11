@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 
 public class NewHighlighterCommand extends DisposableAction {
 
-    private ProfileManager profileManager;
-    private KnowtatorSelectionModel selectionModel;
+    public ProfileManager profileManager;
+    public KnowtatorSelectionModel selectionModel;
 
     public NewHighlighterCommand(KnowtatorSelectionModel selectionModel, ProfileManager profileManager) {
         super("Add Highlighter Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.NEW_HIGHLIGHTER_ICON));
@@ -32,7 +32,7 @@ public class NewHighlighterCommand extends DisposableAction {
         addHighlighterProfile();
     }
 
-    private void addHighlighterProfile() {
+    public void addHighlighterProfile() {
 
 
         Color c = JColorChooser.showDialog(null, "Highlighter color", Color.BLUE);

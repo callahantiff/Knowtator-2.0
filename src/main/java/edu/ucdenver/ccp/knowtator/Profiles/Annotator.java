@@ -6,9 +6,9 @@ import javax.swing.text.DefaultHighlighter;
 import java.util.HashMap;
 
 public class Annotator {
-    private String annotatorName;
-    private String annotatorID;
-    private HashMap<OWLClass, DefaultHighlighter.DefaultHighlightPainter>  highlighters;
+    public String annotatorName;
+    public String annotatorID;
+    public HashMap<OWLClass, DefaultHighlighter.DefaultHighlightPainter>  highlighters;
 
     public Annotator(String annotatorName, String annotatorID) {
         this.annotatorName = annotatorName;

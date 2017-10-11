@@ -36,12 +36,12 @@ import java.util.*;
 @SuppressWarnings({"JavadocReference", "unused", "JavaDoc", "unchecked"})
 public class TextAnnotation {
 
-	private String setName = "Set name not specified";
+	public String setName = "Set name not specified";
 
-	private String docID = "Document id not specified";
+	public String docID = "Document id not specified";
 
-	private String classID = "Class ID not specified";
-	private String className = "Class not specified";
+	public String classID = "Class ID not specified";
+	public String className = "Class not specified";
 
 	public String getAnnotatorName() {
 		return annotatorName;
@@ -61,19 +61,19 @@ public class TextAnnotation {
 		this.annotatorID = annotatorID;
 	}
 
-	private String annotatorName = "Annotator not specified";
+	public String annotatorName = "Annotator not specified";
 
-	private String annotatorID = "AnnotatorID not specified";
+	public String annotatorID = "AnnotatorID not specified";
 
-	private List<TextSpan> textSpans;
+	public List<TextSpan> textSpans;
 
 	// key is a feature name, value is the value of the feature
-	private Map<String, Set<Object>> simpleFeatures;
+	public Map<String, Set<Object>> simpleFeatures;
 
-	private Map<String, Set<TextAnnotation>> complexFeatures;
+	public Map<String, Set<TextAnnotation>> complexFeatures;
 
-	private int size = 0;
-	private OWLClass owlClass;
+	public int size = 0;
+	public OWLClass owlClass;
 
 	public TextAnnotation(String docID, OWLClass owlClass) {
 		this.docID = docID;
@@ -118,16 +118,16 @@ public class TextAnnotation {
 		Collections.sort(this.textSpans);
 	}
 
-	public void setSpan(TextSpan textSpan) {
+	public void setSpan(TextSpan span) {
 		this.textSpans.clear();
-		this.textSpans.add(textSpan);
+		this.textSpans.add(span);
 	}
 
-	private Set<String> getSimpleFeatureNames() {
+	public Set<String> getSimpleFeatureNames() {
 		return Collections.unmodifiableSet(simpleFeatures.keySet());
 	}
 
-	private Set<Object> getSimpleFeatureValues(String featureName) {
+	public Set<Object> getSimpleFeatureValues(String featureName) {
 		if (simpleFeatures.get(featureName) == null)
 			return Collections.emptySet();
 		return Collections.unmodifiableSet(simpleFeatures.get(featureName));
@@ -153,11 +153,11 @@ public class TextAnnotation {
 		simpleFeatures.put(featureName, featureValues);
 	}
 
-	private Set<String> getComplexFeatureNames() {
+	public Set<String> getComplexFeatureNames() {
 		return Collections.unmodifiableSet(complexFeatures.keySet());
 	}
 
-	private Set<TextAnnotation> getComplexFeatureValues(String featureName) {
+	public Set<TextAnnotation> getComplexFeatureValues(String featureName) {
 		if (complexFeatures.get(featureName) == null)
 			return Collections.emptySet();
 		return Collections.unmodifiableSet(complexFeatures.get(featureName));
@@ -179,7 +179,7 @@ public class TextAnnotation {
 		complexFeatures.put(featureName, featureValues);
 	}
 
-	private Set<String> getFeatureNames() {
+	public Set<String> getFeatureNames() {
 		Set<String> featureNames = new HashSet<>(simpleFeatures.keySet());
 		featureNames.addAll(complexFeatures.keySet());
 		return Collections.unmodifiableSet(featureNames);
@@ -206,7 +206,7 @@ public class TextAnnotation {
 	 * returns true only if both annotations have the same non-null
 	 * annotationClass.
 	 */
-	private static boolean classesMatch(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
+	public static boolean classesMatch(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
 		String cls1 = textAnnotation1.getClassName();
 		String cls2 = textAnnotation2.getClassName();
 
@@ -218,7 +218,7 @@ public class TextAnnotation {
 		return TextSpan.intersects(textAnnotation1.getTextSpans(), textAnnotation2.getTextSpans());
 	}
 
-	private static boolean compareNames(Set<String> names1, Set<String> names2) {
+	public static boolean compareNames(Set<String> names1, Set<String> names2) {
 		if (names1.size() != names2.size())
 			return false;
 		for (String name : names1) {
@@ -277,7 +277,7 @@ public class TextAnnotation {
 	 * 
 	 */
 
-	private static int trivialCompare(Set values1, Set values2) {
+	public static int trivialCompare(Set values1, Set values2) {
 		if (values1 == null && values2 == null)
 			return MatchResult.TRIVIAL_MATCH; // if both are null than it is a
 											  // trivial match
@@ -323,7 +323,7 @@ public class TextAnnotation {
 	 * @see #trivialCompare(Set, Set)
 	 */
 
-	private static int compareSimpleFeature(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, String featureName) {
+	public static int compareSimpleFeature(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, String featureName) {
 		// if(!textAnnotation1.isSimpleFeature(featureName) ||
 		// !textAnnotation2.isSimpleFeature(featureName)) return
 		// MatchResult.TRIVIAL_NONMATCH;
@@ -566,7 +566,7 @@ public class TextAnnotation {
 	 *      TextAnnotation, Set)
 	 */
 
-	private static int compareAnnotations(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, int spanComparison,
+	public static int compareAnnotations(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, int spanComparison,
 										  boolean compareClass, Set<String> simpleFeatureNames) {
 		boolean spansMatch = false;
 		boolean classesMatch = false;
@@ -612,17 +612,17 @@ public class TextAnnotation {
 	 * @return the text covered by an textAnnotation.
 	 */
 	public static String getCoveredText(TextAnnotation textAnnotation, String annotationText, String spanSeparator) {
-		List<TextSpan> textSpans = textAnnotation.getTextSpans();
-		if (textSpans == null || textSpans.size() == 0)
+		List<TextSpan> spans = textAnnotation.getTextSpans();
+		if (spans == null || spans.size() == 0)
 			return "";
-		else if (textSpans.size() == 1) {
-			return TextSpan.substring(annotationText, textSpans.get(0));
+		else if (spans.size() == 1) {
+			return TextSpan.substring(annotationText, spans.get(0));
 		} else {
 			StringBuilder sb = new StringBuilder();
-			sb.append(TextSpan.substring(annotationText, textSpans.get(0)));
-			for (int i = 1; i < textSpans.size(); i++) {
+			sb.append(TextSpan.substring(annotationText, spans.get(0)));
+			for (int i = 1; i < spans.size(); i++) {
 				sb.append(spanSeparator);
-				sb.append(TextSpan.substring(annotationText, textSpans.get(i)));
+				sb.append(TextSpan.substring(annotationText, spans.get(i)));
 			}
 			return sb.toString();
 		}
@@ -636,9 +636,9 @@ public class TextAnnotation {
 
 	public int getSize() {
 		if (size == 0) {
-			List<TextSpan> textSpans = getTextSpans();
-			for (TextSpan textSpan : textSpans) {
-				size += textSpan.getSize();
+			List<TextSpan> spans = getTextSpans();
+			for (TextSpan span : spans) {
+				size += span.getSize();
 			}
 			return size;
 		} else
@@ -681,13 +681,13 @@ public class TextAnnotation {
 		return toHTML(true);
 	}
 
-	private String toHTML(boolean printComplexFeatures) {
+	public String toHTML(boolean printComplexFeatures) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ul><li>").append(setName).append("</li>");
 		sb.append("<li>class = ").append(className).append("</li>");
 		sb.append("<li>textSpans = ");
-		for (TextSpan textSpan : textSpans)
-			sb.append(textSpan.toString()).append(" ");
+		for (TextSpan span : textSpans)
+			sb.append(span.toString()).append(" ");
 		sb.append("</li>");
 
 		if (simpleFeatures.size() > 0) {

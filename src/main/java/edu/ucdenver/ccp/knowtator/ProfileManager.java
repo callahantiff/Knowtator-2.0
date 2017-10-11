@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class ProfileManager {
 
-    private Annotator currentAnnotator;
+    public Annotator currentAnnotator;
 
-    private Map<String, Annotator> profiles;
-    private KnowtatorView view;
+    public Map<String, Annotator> profiles;
+    public KnowtatorView view;
 
 
     ProfileManager(KnowtatorView view) {
@@ -41,7 +41,7 @@ public class ProfileManager {
         }
     }
 
-    private void removeCurrentProfile() {
+    public void removeCurrentProfile() {
     }
 
     public void loadProfile(String profileName) {
